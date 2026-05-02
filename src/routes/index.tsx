@@ -9,6 +9,12 @@ export const Route = createFileRoute("/")({
       { title: "nodeFPS — Rank Bar" },
       { name: "description", content: "Compact Fortnite ranked stream overlay for nodeFPS." },
     ],
+    links: [
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap",
+      },
+    ],
   }),
 });
 
