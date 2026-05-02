@@ -75,57 +75,115 @@ function Index() {
 
   return (
     <main
-      className="min-h-screen flex items-center justify-center p-3 font-mono"
-      style={{ background: transparent ? "transparent" : "hsl(var(--paper))" }}
+      className="min-h-screen flex items-center justify-center p-3"
+      style={{
+        background: transparent ? "transparent" : "hsl(var(--paper))",
+        fontFamily: "'Press Start 2P', monospace",
+        imageRendering: "pixelated",
+      }}
     >
+      {/* Pixel-art frame: outer dark border + inner paper, layered like the overlay */}
       <div
-        className="flex items-stretch border-2 border-[hsl(var(--frame))] bg-[hsl(var(--paper))] text-[hsl(var(--frame))] shadow-md"
-        style={{ minWidth: 360, maxWidth: 560, width: "100%" }}
+        className="relative"
+        style={{
+          minWidth: 380,
+          maxWidth: 600,
+          width: "100%",
+          padding: 4,
+          background: "hsl(var(--frame))",
+          boxShadow:
+            "0 0 0 4px hsl(var(--paper)), 0 0 0 8px hsl(var(--frame))",
+        }}
       >
-        {/* Mode tag */}
         <div
-          className="flex items-center justify-center px-2 text-[9px] font-black tracking-[0.2em] uppercase"
-          style={{ background: "hsl(var(--frame))", color: "hsl(var(--paper))" }}
+          className="flex items-stretch"
+          style={{
+            background: "hsl(var(--paper))",
+            color: "hsl(var(--frame))",
+            border: "2px solid hsl(var(--frame))",
+          }}
         >
-          {mode === "zb" ? "ZB" : "BR"}
-        </div>
+          {/* Corner pluses for pixel-art HUD feel */}
+          <span className="absolute -top-0.5 -left-0.5 text-[10px] leading-none" style={{ color: "hsl(var(--paper))" }}>+</span>
+          <span className="absolute -top-0.5 -right-0.5 text-[10px] leading-none" style={{ color: "hsl(var(--paper))" }}>+</span>
+          <span className="absolute -bottom-0.5 -left-0.5 text-[10px] leading-none" style={{ color: "hsl(var(--paper))" }}>+</span>
+          <span className="absolute -bottom-0.5 -right-0.5 text-[10px] leading-none" style={{ color: "hsl(var(--paper))" }}>+</span>
 
-        {/* Rank */}
-        <div className="flex flex-col justify-center px-3 py-1.5 border-r-2 border-[hsl(var(--frame))] min-w-[120px]">
-          <div className="text-[8px] tracking-[0.25em] uppercase opacity-70 leading-none">
-            Rank
-          </div>
+          {/* Mode tag */}
           <div
-            className="text-sm font-black uppercase tracking-wide leading-tight truncate"
-            style={{ color }}
+            className="flex items-center justify-center px-2"
+            style={{
+              background: "hsl(var(--frame))",
+              color: "hsl(var(--paper))",
+              fontSize: 8,
+              letterSpacing: "0.1em",
+            }}
           >
-            {division}
+            {mode === "zb" ? "ZB" : "BR"}
           </div>
-        </div>
 
-        {/* Promotion bar */}
-        <div className="flex-1 flex flex-col justify-center px-3 py-1.5 border-r-2 border-[hsl(var(--frame))]">
-          <div className="flex items-baseline justify-between leading-none">
-            <span className="text-[8px] tracking-[0.25em] uppercase opacity-70">
-              Next Rank
-            </span>
-            <span className="text-[11px] font-bold tabular-nums">{pct}%</span>
-          </div>
-          <div className="mt-1 h-1.5 bg-[hsl(var(--frame))]/15 border border-[hsl(var(--frame))]/40 overflow-hidden">
+          {/* Rank */}
+          <div
+            className="flex flex-col justify-center px-3 py-2 min-w-[130px]"
+            style={{ borderRight: "2px solid hsl(var(--frame))" }}
+          >
+            <div style={{ fontSize: 6, opacity: 0.7, letterSpacing: "0.15em" }}>
+              RANK
+            </div>
             <div
-              className="h-full transition-all duration-700"
-              style={{ width: `${pct}%`, background: color }}
-            />
+              className="uppercase truncate"
+              style={{ color, fontSize: 10, marginTop: 6, textShadow: "1px 1px 0 hsl(var(--frame) / 0.25)" }}
+            >
+              {division}
+            </div>
           </div>
-        </div>
 
-        {/* K/D */}
-        <div className="flex flex-col justify-center px-3 py-1.5 min-w-[64px] items-end">
-          <div className="text-[8px] tracking-[0.25em] uppercase opacity-70 leading-none">
-            K/D
+          {/* Promotion bar */}
+          <div
+            className="flex-1 flex flex-col justify-center px-3 py-2"
+            style={{ borderRight: "2px solid hsl(var(--frame))" }}
+          >
+            <div className="flex items-center justify-between">
+              <span style={{ fontSize: 6, letterSpacing: "0.15em", opacity: 0.7 }}>
+                NEXT
+              </span>
+              <span style={{ fontSize: 8 }} className="tabular-nums">
+                {pct}%
+              </span>
+            </div>
+            {/* Pixel progress bar: chunky blocks */}
+            <div
+              className="mt-2 flex gap-[2px]"
+              style={{
+                padding: 2,
+                border: "2px solid hsl(var(--frame))",
+                background: "hsl(var(--frame) / 0.1)",
+              }}
+            >
+              {Array.from({ length: 16 }).map((_, i) => {
+                const filled = i < Math.round((pct / 100) * 16);
+                return (
+                  <div
+                    key={i}
+                    style={{
+                      flex: 1,
+                      height: 8,
+                      background: filled ? color : "hsl(var(--frame) / 0.15)",
+                    }}
+                  />
+                );
+              })}
+            </div>
           </div>
-          <div className="text-base font-black tabular-nums leading-tight">
-            {kd.toFixed(2)}
+
+          {/* K/D */}
+          <div className="flex flex-col justify-center px-3 py-2 min-w-[72px] items-end">
+            <div style={{ fontSize: 6, opacity: 0.7, letterSpacing: "0.15em" }}>
+              K/D
+            </div>
+            <div className="tabular-nums" style={{ fontSize: 12, marginTop: 6 }}>
+              {kd.toFixed(2)}
+            </div>
           </div>
         </div>
       </div>
