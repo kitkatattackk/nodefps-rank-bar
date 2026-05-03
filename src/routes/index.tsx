@@ -132,6 +132,47 @@ function Index() {
   }, [targetKd]);
 
   // ─────────────────────────────────────────────
+  // STYLE: MICRO  (?style=micro)
+  // Ultra-minimal pill — icon + rank name + K/D only, no bar, no labels
+  // Recommended OBS browser source size: ~220×30
+  // ─────────────────────────────────────────────
+  if (style === "micro") {
+    return (
+      <main style={{
+        display: "inline-flex",
+        background: "transparent",
+        fontFamily: "'Press Start 2P', monospace",
+      }}>
+        <div
+          className="flex items-center gap-2 px-2 py-1"
+          style={{
+            background: transparent ? "transparent" : "hsl(var(--paper))",
+            border: "2px solid hsl(var(--frame))",
+            color: "hsl(var(--frame))",
+          }}
+        >
+          <GlowIcon division={division} size={20} color={color} />
+          <span className="uppercase" style={{ color, fontSize: 9, whiteSpace: "nowrap" }}>
+            {division}
+          </span>
+          <span style={{ opacity: 0.4, fontSize: 8 }}>|</span>
+          <span
+            className="tabular-nums"
+            style={{
+              fontSize: 9,
+              color: flash ? color : "inherit",
+              transition: "color 0.3s",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {displayKd.toFixed(2)} K/D
+          </span>
+        </div>
+      </main>
+    );
+  }
+
+  // ─────────────────────────────────────────────
   // STYLE: COMPACT  (?style=compact)
   // Minimal single-line bar — icon, rank, progress, K/D
   // Recommended OBS browser source size: ~340×36
