@@ -1,21 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useCallback, useRef } from "react";
-import { getFortniteStats } from "@/server/fortnite.functions";
 
 export const Route = createFileRoute("/")({
   component: Index,
-  head: () => ({
-    meta: [
-      { title: "nodeFPS — Rank Bar" },
-      { name: "description", content: "Compact Fortnite ranked stream overlay for nodeFPS." },
-    ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap",
-      },
-    ],
-  }),
 });
 
 const RANK_COLORS: Record<string, string> = {
@@ -82,11 +69,12 @@ function Index() {
   const rankOverride = useQueryParam("rank", "");
   const pctOverride = useQueryParam("pct", "");
 
-  const [data, setData] = useState<Awaited<ReturnType<typeof getFortniteStats>> | null>(null);
+  const [data, setData] = useState<{ error: string | null; stats: { kd: number } | null } | null>(null);
 
   const load = useCallback(async () => {
-    const res = await getFortniteStats({ data: { name, accountType } });
-    setData(res);
+    const res = await fetch(`/api/stats?name=${encodeURIComponent(name)}&accountType=${accountType}`);
+    const json = await res.json();
+    setData(json);
   }, [name, accountType]);
 
   useEffect(() => {
