@@ -110,10 +110,11 @@ function Index() {
     }
   }, [transparent]);
 
-  const division: string = (data?.stats?.division ?? rankOverride) || "Unranked";
-  const pct: number = data?.stats?.pct ?? (pctOverride ? parseInt(pctOverride, 10) : 0);
+  // URL params take priority over API data (used by preview iframes)
+  const division: string = rankOverride || data?.stats?.division || "Unranked";
+  const pct: number = pctOverride ? parseInt(pctOverride, 10) : (data?.stats?.pct ?? 0);
   const color = rankColor(division);
-  const targetKd = data?.stats?.kd ?? (kdOverride ? parseFloat(kdOverride) : 0);
+  const targetKd = kdOverride ? parseFloat(kdOverride) : (data?.stats?.kd ?? 0);
   const [displayKd, setDisplayKd] = useState(targetKd);
   const [flash, setFlash] = useState(false);
   const prevKd = useRef(targetKd);
