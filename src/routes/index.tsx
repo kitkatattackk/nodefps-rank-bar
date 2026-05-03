@@ -76,6 +76,13 @@ function useQueryParam(key: string, fallback: string) {
 }
 
 function Index() {
+  // Redirect bare visits (no overlay params) to the overview page
+  useEffect(() => {
+    if (typeof window !== "undefined" && !window.location.search) {
+      window.location.replace("/overview");
+    }
+  }, []);
+
   const [name] = useState(() => useQueryParam("name", "nodeFPS"));
   const mode = useQueryParam("mode", "zb");
   const transparent = useQueryParam("bg", "1") === "0";
