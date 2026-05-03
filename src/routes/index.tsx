@@ -140,7 +140,7 @@ function Index() {
     return (
       <main style={{
         display: "inline-flex",
-        background: "transparent",
+        background: transparent ? "transparent" : "hsl(var(--paper))",
         fontFamily: "'Press Start 2P', monospace",
       }}>
         <div
