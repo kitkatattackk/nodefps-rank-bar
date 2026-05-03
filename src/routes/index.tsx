@@ -61,6 +61,7 @@ function Index() {
   const [name] = useState(() => useQueryParam("name", "nodeFPS"));
   const mode = useQueryParam("mode", "zb");
   const transparent = useQueryParam("bg", "1") === "0";
+  const style = useQueryParam("style", "full"); // "full" or "compact"
 
   const [data, setData] = useState<{
     error: string | null;
@@ -111,6 +112,76 @@ function Index() {
     };
     requestAnimationFrame(tick);
   }, [targetKd]);
+
+  if (style === "compact") {
+    return (
+      <main
+        style={{
+          display: "inline-flex",
+          background: transparent ? "transparent" : "hsl(var(--paper))",
+          fontFamily: "'Press Start 2P', monospace",
+          padding: 2,
+        }}
+      >
+        <div
+          className="flex items-center gap-3 px-3 py-1"
+          style={{
+            background: "hsl(var(--paper))",
+            border: "2px solid hsl(var(--frame))",
+            color: "hsl(var(--frame))",
+          }}
+        >
+          {/* Rank icon */}
+          <div style={{ filter: `drop-shadow(0 0 6px ${color})` }}>
+            <RankIcon division={division} size={28} />
+          </div>
+
+          {/* Rank name */}
+          <span
+            className="uppercase"
+            style={{ color, fontSize: 11, whiteSpace: "nowrap" }}
+          >
+            {division}
+          </span>
+
+          {/* Mini progress bar */}
+          <div
+            className="flex gap-[2px]"
+            style={{
+              padding: 2,
+              border: "2px solid hsl(var(--frame))",
+              background: "hsl(var(--frame) / 0.1)",
+            }}
+          >
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  width: 6,
+                  height: 6,
+                  background: i < Math.round((pct / 100) * 10) ? color : "hsl(var(--frame) / 0.15)",
+                }}
+              />
+            ))}
+          </div>
+
+          {/* K/D */}
+          <span
+            className="tabular-nums"
+            style={{
+              fontSize: 11,
+              color: flash ? color : "inherit",
+              transition: "color 0.3s",
+              background: flash ? `${color}22` : "transparent",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {displayKd.toFixed(2)} K/D
+          </span>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main
