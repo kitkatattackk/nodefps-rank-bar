@@ -6,14 +6,14 @@ export const Route = createFileRoute("/")({
 });
 
 const RANK_COLORS: Record<string, string> = {
-  bronze:   "#cd7f32",
-  silver:   "#c0c0c0",
-  gold:     "#ffd700",
-  platinum: "#3cc9c0",
-  diamond:  "#5b9bd5",
+  bronze:   "#b5651d",  // darker bronze — readable on beige
+  silver:   "#7a7a8c",  // muted slate — not washed out on light bg
+  gold:     "#c8820a",  // deep amber-gold — high contrast on beige
+  platinum: "#2aaba2",  // slightly deepened teal
+  diamond:  "#4080c0",  // slightly deeper blue
   elite:    "#d946a8",
   champion: "#e84c1e",
-  unreal:   "#e8c96a",
+  unreal:   "#5548d9",
 };
 
 function rankKey(division?: string | null): string | null {
@@ -81,9 +81,10 @@ function Index() {
   const transparent = useQueryParam("bg", "1") === "0";
   const style = useQueryParam("style", "full");
 
-  // Manual fallbacks for local dev / preview (?rank=Elite+1&pct=13)
+  // Manual fallbacks for local dev / preview (?rank=Elite+1&pct=13&kd=3.50)
   const rankOverride = useQueryParam("rank", "");
   const pctOverride  = useQueryParam("pct", "");
+  const kdOverride   = useQueryParam("kd", "");
 
   const [data, setData] = useState<{
     error: string | null;
@@ -112,7 +113,7 @@ function Index() {
   const division: string = (data?.stats?.division ?? rankOverride) || "Unranked";
   const pct: number = data?.stats?.pct ?? (pctOverride ? parseInt(pctOverride, 10) : 0);
   const color = rankColor(division);
-  const targetKd = data?.stats?.kd ?? 0;
+  const targetKd = data?.stats?.kd ?? (kdOverride ? parseFloat(kdOverride) : 0);
   const [displayKd, setDisplayKd] = useState(targetKd);
   const [flash, setFlash] = useState(false);
   const prevKd = useRef(targetKd);
