@@ -129,7 +129,7 @@ function Index() {
       <div
         className="relative"
         style={{
-          width: "100%",
+          width: 520,
           padding: 4,
           background: "hsl(var(--frame))",
           boxShadow:
@@ -224,19 +224,19 @@ function Index() {
 
           {/* K/D */}
           <div
-            className="flex flex-col justify-center px-3 py-2 min-w-[72px] items-end"
+            className="flex flex-col justify-center px-4 py-2 min-w-[90px] items-end"
             style={{
               transition: "background 0.3s",
               background: flash ? `${color}22` : "transparent",
             }}
           >
-            <div style={{ fontSize: 6, opacity: 0.7, letterSpacing: "0.15em" }}>
+            <div style={{ fontSize: 8, opacity: 0.7, letterSpacing: "0.15em" }}>
               K/D
             </div>
             <div
               className="tabular-nums"
               style={{
-                fontSize: 12,
+                fontSize: 18,
                 marginTop: 6,
                 color: flash ? color : "inherit",
                 transition: "color 0.3s",
