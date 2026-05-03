@@ -113,6 +113,11 @@ function Index() {
     requestAnimationFrame(tick);
   }, [targetKd]);
 
+  // ─────────────────────────────────────────────
+  // STYLE: COMPACT  (?style=compact)
+  // Minimal single-line bar — icon, rank, progress, K/D
+  // Recommended OBS browser source size: ~340×36
+  // ─────────────────────────────────────────────
   if (style === "compact") {
     return (
       <main
@@ -183,6 +188,11 @@ function Index() {
     );
   }
 
+  // ─────────────────────────────────────────────
+  // STYLE: FULL  (?style=full  — default)
+  // Full pixel-art HUD bar — ZB/BR tag, rank icon, progress bar, K/D
+  // Recommended OBS browser source size: ~540×80
+  // ─────────────────────────────────────────────
   return (
     <main
       className="min-h-screen flex items-center justify-center p-3"
