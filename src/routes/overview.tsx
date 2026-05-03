@@ -114,7 +114,7 @@ export default function Overview() {
                   src="/?rank=Champion&pct=55&kd=8.30&style=full&bg=0&mode=zb"
                   scrolling="no"
                   allowTransparency={true}
-                  style={{ border: "none", background: "transparent", width: 560, height: 90, display: "block", pointerEvents: "none" }}
+                  style={{ border: "none", background: "transparent", width: 560, height: 115, display: "block", pointerEvents: "none" }}
                 />
               </div>
             </div>
