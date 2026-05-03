@@ -79,7 +79,11 @@ function Index() {
   const [name] = useState(() => useQueryParam("name", "nodeFPS"));
   const mode = useQueryParam("mode", "zb");
   const transparent = useQueryParam("bg", "1") === "0";
-  const style = useQueryParam("style", "full"); // "full" or "compact"
+  const style = useQueryParam("style", "full");
+
+  // Manual fallbacks for local dev / preview (?rank=Elite+1&pct=13)
+  const rankOverride = useQueryParam("rank", "");
+  const pctOverride  = useQueryParam("pct", "");
 
   const [data, setData] = useState<{
     error: string | null;
@@ -105,8 +109,8 @@ function Index() {
     }
   }, [transparent]);
 
-  const division: string = data?.stats?.division ?? "Unranked";
-  const pct: number = data?.stats?.pct ?? 0;
+  const division: string = (data?.stats?.division ?? rankOverride) || "Unranked";
+  const pct: number = data?.stats?.pct ?? (pctOverride ? parseInt(pctOverride, 10) : 0);
   const color = rankColor(division);
   const targetKd = data?.stats?.kd ?? 0;
   const [displayKd, setDisplayKd] = useState(targetKd);
@@ -138,15 +142,14 @@ function Index() {
   // ─────────────────────────────────────────────
   if (style === "micro") {
     return (
-      <main style={{
-        display: "inline-flex",
-        background: transparent ? "transparent" : "hsl(var(--paper))",
+      <main className="min-h-screen flex items-center justify-center" style={{
+        background: "transparent",
         fontFamily: "'Press Start 2P', monospace",
       }}>
         <div
           className="flex items-center gap-2 px-2 py-1"
           style={{
-            background: transparent ? "transparent" : "hsl(var(--paper))",
+            background: "hsl(var(--paper))",
             border: "2px solid hsl(var(--frame))",
             color: "hsl(var(--frame))",
           }}
@@ -180,11 +183,10 @@ function Index() {
   if (style === "compact") {
     return (
       <main
+        className="min-h-screen flex items-center justify-center"
         style={{
-          display: "inline-flex",
-          background: transparent ? "transparent" : "hsl(var(--paper))",
+          background: "transparent",
           fontFamily: "'Press Start 2P', monospace",
-          padding: 2,
         }}
       >
         <div
