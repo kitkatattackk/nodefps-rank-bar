@@ -18,6 +18,7 @@ const STYLES = [
     desc: "Full HUD bar — ZB tag, icon, rank, progress, K/D",
     iframeW: 580,
     iframeH: 110,
+    dummy: "rank=Unreal&pct=67&kd=14.70&bg=0",
   },
   {
     label: "COMPACT",
@@ -26,6 +27,7 @@ const STYLES = [
     desc: "Single-line — icon, rank, mini bar, K/D",
     iframeW: 580,
     iframeH: 80,
+    dummy: "rank=Diamond+3&pct=41&kd=3.85&bg=0",
   },
   {
     label: "MICRO",
@@ -34,10 +36,9 @@ const STYLES = [
     desc: "Pill — icon, rank name, K/D only",
     iframeW: 580,
     iframeH: 70,
+    dummy: "rank=Gold+2&pct=78&kd=1.42&bg=0",
   },
 ];
-
-const DUMMY = "name=nodefps&rank=Unreal&pct=67&bg=0";
 
 function Preview() {
   useEffect(() => {
@@ -74,7 +75,7 @@ function Preview() {
       </div>
 
       {/* Style rows */}
-      {STYLES.map(({ label, param, size, desc, iframeW, iframeH }, i) => (
+      {STYLES.map(({ label, param, size, desc, iframeW, iframeH, dummy }, i) => (
         <div key={label} style={{ width: "100%", maxWidth: 640 }}>
           {/* Divider */}
           {i > 0 && (
@@ -96,7 +97,7 @@ function Preview() {
 
             {/* Widget */}
             <iframe
-              src={`/?${DUMMY}&${param}`}
+              src={`/?${dummy}&${param}`}
               scrolling="no"
               allowTransparency={true}
               style={{
