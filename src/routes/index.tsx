@@ -52,6 +52,24 @@ function RankIcon({ division, size = 40 }: { division: string; size?: number }) 
   );
 }
 
+function GlowIcon({ division, size, color }: { division: string; size: number; color: string }) {
+  return (
+    <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
+      {/* Radial glow layer behind the icon — doesn't follow image bounding box */}
+      <div style={{
+        position: "absolute",
+        inset: -size * 0.35,
+        background: `radial-gradient(circle, ${color}90 0%, ${color}40 40%, transparent 70%)`,
+        filter: `blur(${Math.round(size * 0.22)}px)`,
+        pointerEvents: "none",
+      }} />
+      <div style={{ position: "relative" }}>
+        <RankIcon division={division} size={size} />
+      </div>
+    </div>
+  );
+}
+
 function useQueryParam(key: string, fallback: string) {
   if (typeof window === "undefined") return fallback;
   return new URLSearchParams(window.location.search).get(key) || fallback;
@@ -137,9 +155,7 @@ function Index() {
           }}
         >
           {/* Rank icon */}
-          <div style={{ filter: `drop-shadow(0 0 6px ${color})` }}>
-            <RankIcon division={division} size={28} />
-          </div>
+          <GlowIcon division={division} size={28} color={color} />
 
           {/* Rank name */}
           <span
@@ -245,14 +261,7 @@ function Index() {
             className="flex items-center gap-3 px-4 py-2 min-w-[180px]"
             style={{ borderRight: "2px solid hsl(var(--frame))" }}
           >
-            <div style={{
-              border: `2px solid ${color}`,
-              boxShadow: `0 0 8px ${color}80, inset 0 0 6px ${color}20`,
-              background: "hsl(var(--paper))",
-              padding: 2,
-            }}>
-              <RankIcon division={division} size={48} />
-            </div>
+            <GlowIcon division={division} size={52} color={color} />
             <div className="flex flex-col justify-center">
               <div style={{ fontSize: 7, opacity: 0.7, letterSpacing: "0.15em" }}>
                 RANK
