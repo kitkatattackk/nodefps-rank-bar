@@ -11,13 +11,12 @@ export const getFortniteStats = createServerFn({ method: "GET" })
   .handler(async ({ data }) => {
     const apiKey = process.env.FORTNITE_API_KEY;
     if (!apiKey) {
-      return { error: "API key not configured", stats: null, ranked: null };
+      return { error: "API key not configured", stats: null };
     }
 
     try {
-      // Stats v2 (BR overall)
       const statsRes = await fetch(
-        `https://fortnite-api.com/v2/stats/br/v2?name=${encodeURIComponent(data.name)}&accountType=${data.accountType}`,
+        `https://fortnite-api.com/v2/stats/br/v2?name=${encodeURIComponent(data.name)}&accountType=${data.accountType}&timeWindow=season`,
         { headers: { Authorization: apiKey } },
       );
 
@@ -25,25 +24,12 @@ export const getFortniteStats = createServerFn({ method: "GET" })
         return {
           error: statsRes.status === 404 ? "Player not found" : `API error (${statsRes.status})`,
           stats: null,
-          ranked: null,
         };
       }
+
       const statsJson = (await statsRes.json()) as any;
       const account = statsJson?.data?.account;
       const overall = statsJson?.data?.stats?.all?.overall ?? null;
-
-      // Ranked (current season BR + ZB)
-      let ranked: any = null;
-      if (account?.id) {
-        const rankedRes = await fetch(
-          `https://fortnite-api.com/v2/stats/br/v2/ranked?accountId=${account.id}`,
-          { headers: { Authorization: apiKey } },
-        );
-        if (rankedRes.ok) {
-          const rankedJson = (await rankedRes.json()) as any;
-          ranked = rankedJson?.data ?? null;
-        }
-      }
 
       return {
         error: null,
@@ -55,13 +41,10 @@ export const getFortniteStats = createServerFn({ method: "GET" })
           kd: overall?.kd ?? 0,
           matches: overall?.matches ?? 0,
           winRate: overall?.winRate ?? 0,
-          top10: overall?.top10 ?? 0,
-          minutesPlayed: overall?.minutesPlayed ?? 0,
         },
-        ranked,
       };
     } catch (err) {
       console.error("Fortnite API error:", err);
-      return { error: "Failed to fetch stats", stats: null, ranked: null };
+      return { error: "Failed to fetch stats", stats: null };
     }
   });
