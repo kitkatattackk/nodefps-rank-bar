@@ -127,8 +127,24 @@ function Preview() {
       ))}
 
       {/* Footer */}
-      <div style={{ color: DIM, fontSize: 6, letterSpacing: "0.15em", marginTop: 48, opacity: 0.6 }}>
-        ADD ?bg=0 TO URL FOR TRANSPARENT BACKGROUND
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, marginTop: 48 }}>
+        <div style={{ color: DIM, fontSize: 6, letterSpacing: "0.15em", opacity: 0.6 }}>
+          ADD ?bg=0 TO URL FOR TRANSPARENT BACKGROUND
+        </div>
+        <a
+          href="/config"
+          style={{
+            color: GOLD,
+            fontSize: 7,
+            letterSpacing: "0.18em",
+            textDecoration: "none",
+            border: `1px solid ${DIM}66`,
+            padding: "6px 14px",
+            background: `${BG2}cc`,
+          }}
+        >
+          ▶ BUILD YOUR OBS URL →
+        </a>
       </div>
     </main>
   );
