@@ -13,7 +13,7 @@ const RANK_COLORS: Record<string, string> = {
   diamond:  "#5b9bd5",
   elite:    "#d946a8",
   champion: "#e84c1e",
-  unreal:   "#7ee8fa",
+  unreal:   "#e8c96a",
 };
 
 function rankKey(division?: string | null): string | null {
