@@ -32,7 +32,7 @@ const STYLES = [
   },
 ];
 
-const DUMMY = "name=nodefps&rank=Elite+1&pct=13&bg=0";
+const DUMMY = "name=nodefps&rank=Unreal&pct=67&bg=0";
 
 function Preview() {
   useEffect(() => {
