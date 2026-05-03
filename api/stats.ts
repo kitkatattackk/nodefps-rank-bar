@@ -25,15 +25,32 @@ export default async function handler(req: Request) {
 
     const json = (await res.json()) as any;
     const segments: any[] = json?.data?.segments ?? [];
+    const debug = url.searchParams.get("debug") === "1";
+
+    // Return raw segment map for debugging
+    if (debug) {
+      return Response.json({
+        segments: segments.map((s) => ({
+          type: s.type,
+          attributes: s.attributes,
+          metadataName: s.metadata?.name,
+          statKeys: Object.keys(s.stats ?? {}),
+          rankStat: s.stats?.rank,
+          promotionProgress: s.stats?.promotionProgress,
+          rankScore: s.stats?.rankScore,
+          kd: s.stats?.kd,
+        })),
+      });
+    }
 
     // Find the ranked playlist segment matching the mode
     const rankedSegment = segments.find((s) => {
       if (s.type !== "playlist") return false;
       const id: string = (s.attributes?.playlistId ?? "").toLowerCase();
-      const name: string = (s.metadata?.name ?? "").toLowerCase();
+      const sName: string = (s.metadata?.name ?? "").toLowerCase();
       return mode === "zb"
-        ? id.includes("ranked-zb") || (name.includes("ranked") && name.includes("zero"))
-        : id.includes("ranked-br") || (name.includes("ranked") && !name.includes("zero"));
+        ? id.includes("ranked-zb") || (sName.includes("ranked") && sName.includes("zero"))
+        : id.includes("ranked-br") || (sName.includes("ranked") && !sName.includes("zero"));
     });
 
     // Overview segment for season K/D
