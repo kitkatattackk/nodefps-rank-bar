@@ -47,7 +47,7 @@ function RankIcon({ division, size = 40 }: { division: string; size?: number }) 
       alt={division}
       width={size}
       height={size}
-      style={{ objectFit: "contain", imageRendering: "auto" }}
+      style={{ objectFit: "contain", imageRendering: "auto", mixBlendMode: "multiply" }}
     />
   );
 }
