@@ -104,17 +104,17 @@ export default function Overview() {
 
             {/* FULL */}
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" as const }}>
                 <span style={{ color: GOLD, fontSize: 7, letterSpacing: "0.18em" }}>FULL</span>
                 <span style={{ color: DIM, fontSize: 6 }}>ZB tag · rank icon · progress bar · K/D</span>
-                <span style={{ marginLeft: "auto", color: DIM, fontSize: 6, border: `1px solid ${DIM}44`, padding: "2px 6px" }}>540 × 80px</span>
+                <span style={{ marginLeft: "auto", color: DIM, fontSize: 6, border: `1px solid ${DIM}44`, padding: "2px 6px", flexShrink: 0 }}>540 × 80px</span>
               </div>
-              <div style={{ background: FRAME, border: `1px solid ${DIM}33`, padding: "12px 0", display: "flex", justifyContent: "center" }}>
+              <div style={{ background: FRAME, border: `1px solid ${DIM}33`, padding: "20px 16px", display: "flex", justifyContent: "center", overflow: "visible" }}>
                 <iframe
                   src="/?rank=Champion&pct=55&kd=8.30&style=full&bg=0&mode=zb"
                   scrolling="no"
                   allowTransparency={true}
-                  style={{ border: "none", background: "transparent", width: 560, height: 115, display: "block", pointerEvents: "none" }}
+                  style={{ border: "none", background: "transparent", width: 560, height: 125, display: "block", pointerEvents: "none" }}
                 />
               </div>
             </div>
@@ -168,10 +168,10 @@ export default function Overview() {
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <FeatureRow icon="◆" label="ALL 8 RANKS" desc="Bronze through Unreal — unique icon, color, and glow per rank" />
             <FeatureRow icon="◆" label="ANIMATED K/D" desc="Smooth counter animation when K/D updates. Flashes on change." />
-            <FeatureRow icon="◆" label="AUTO-REFRESH" desc="Polls for new stats every 30 seconds automatically" />
             <FeatureRow icon="◆" label="ZB + BR MODES" desc="Switch between Zero Build and Battle Royale rankings" />
             <FeatureRow icon="◆" label="TRANSPARENT BG" desc="Drop straight onto any stream layout with no background" />
             <FeatureRow icon="◆" label="PIXEL-ART HUD" desc="Retro game aesthetic — fits FPS and battle royale streams" />
+            <FeatureRow icon="◆" label="NO-CODE SETUP" desc="Config page generates your OBS URL — no installs, no accounts" />
           </div>
         </Section>
 
@@ -269,6 +269,141 @@ export default function Overview() {
           </div>
         </Section>
       </div>
+
+      {/* ── DIVIDER ── */}
+      <div style={{ width: "100%", maxWidth: 700, height: 1, background: `linear-gradient(90deg, transparent, ${DIM}44, transparent)` }} />
+
+      {/* ── UPCOMING FEATURES ── */}
+      <div style={{ width: "100%", maxWidth: 700 }}>
+        <Section title="UPCOMING FEATURES">
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+
+            {/* Live auto-refresh */}
+            <div style={{
+              background: BG3,
+              border: `1px solid ${GOLD}33`,
+              padding: 16,
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ color: GOLD, fontSize: 8 }}>⟳</span>
+                <span style={{ color: GOLD, fontSize: 6, letterSpacing: "0.15em" }}>LIVE AUTO-REFRESH</span>
+              </div>
+              <div style={{ color: DIM, fontSize: 5, letterSpacing: "0.08em", lineHeight: 1.9 }}>
+                Stats update automatically every 30 seconds via the Tracker.gg API — no manual URL changes needed. Pending TRN production API approval.
+              </div>
+              <span style={{
+                alignSelf: "flex-start" as const,
+                background: `${GOLD}18`,
+                border: `1px solid ${GOLD}44`,
+                color: GOLD,
+                fontSize: 5,
+                letterSpacing: "0.12em",
+                padding: "2px 7px",
+                marginTop: 2,
+              }}>
+                IN REVIEW
+              </span>
+            </div>
+
+            {/* Rank-up alert */}
+            <div style={{
+              background: BG3,
+              border: `1px solid ${DIM}33`,
+              padding: 16,
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ color: DIM, fontSize: 8 }}>▲</span>
+                <span style={{ color: TEXT, fontSize: 6, letterSpacing: "0.15em" }}>RANK-UP ALERT</span>
+              </div>
+              <div style={{ color: DIM, fontSize: 5, letterSpacing: "0.08em", lineHeight: 1.9 }}>
+                Visual flash + sound effect triggered automatically when you rank up mid-stream.
+              </div>
+              <span style={{
+                alignSelf: "flex-start" as const,
+                background: `${DIM}18`,
+                border: `1px solid ${DIM}44`,
+                color: DIM,
+                fontSize: 5,
+                letterSpacing: "0.12em",
+                padding: "2px 7px",
+                marginTop: 2,
+              }}>
+                PLANNED
+              </span>
+            </div>
+
+            {/* Custom themes */}
+            <div style={{
+              background: BG3,
+              border: `1px solid ${DIM}33`,
+              padding: 16,
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ color: DIM, fontSize: 8 }}>◈</span>
+                <span style={{ color: TEXT, fontSize: 6, letterSpacing: "0.15em" }}>CUSTOM THEMES</span>
+              </div>
+              <div style={{ color: DIM, fontSize: 5, letterSpacing: "0.08em", lineHeight: 1.9 }}>
+                Choose from multiple HUD color themes or build your own to match your stream branding.
+              </div>
+              <span style={{
+                alignSelf: "flex-start" as const,
+                background: `${DIM}18`,
+                border: `1px solid ${DIM}44`,
+                color: DIM,
+                fontSize: 5,
+                letterSpacing: "0.12em",
+                padding: "2px 7px",
+                marginTop: 2,
+              }}>
+                PLANNED
+              </span>
+            </div>
+
+            {/* More games */}
+            <div style={{
+              background: BG3,
+              border: `1px solid ${DIM}33`,
+              padding: 16,
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ color: DIM, fontSize: 8 }}>⊕</span>
+                <span style={{ color: TEXT, fontSize: 6, letterSpacing: "0.15em" }}>MORE GAMES</span>
+              </div>
+              <div style={{ color: DIM, fontSize: 5, letterSpacing: "0.08em", lineHeight: 1.9 }}>
+                Rocket League, Apex Legends, and Valorant rank overlays using the same pixel-art style.
+              </div>
+              <span style={{
+                alignSelf: "flex-start" as const,
+                background: `${DIM}18`,
+                border: `1px solid ${DIM}44`,
+                color: DIM,
+                fontSize: 5,
+                letterSpacing: "0.12em",
+                padding: "2px 7px",
+                marginTop: 2,
+              }}>
+                PLANNED
+              </span>
+            </div>
+
+          </div>
+        </Section>
+      </div>
+
+      {/* ── DIVIDER ── */}
+      <div style={{ width: "100%", maxWidth: 700, height: 1, background: `linear-gradient(90deg, transparent, ${DIM}44, transparent)` }} />
 
       {/* ── FOOTER ── */}
       <div style={{ display: "flex", gap: 16, marginTop: 8 }}>
