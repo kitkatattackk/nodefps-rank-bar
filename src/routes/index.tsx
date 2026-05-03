@@ -47,7 +47,7 @@ function RankIcon({ division, size = 40 }: { division: string; size?: number }) 
       alt={division}
       width={size}
       height={size}
-      style={{ objectFit: "contain", imageRendering: "auto", mixBlendMode: "multiply" }}
+      style={{ objectFit: "contain", imageRendering: "auto" }}
     />
   );
 }
@@ -245,8 +245,13 @@ function Index() {
             className="flex items-center gap-3 px-4 py-2 min-w-[180px]"
             style={{ borderRight: "2px solid hsl(var(--frame))" }}
           >
-            <div style={{ filter: `drop-shadow(0 0 8px ${color}) drop-shadow(0 0 16px ${color}80)` }}>
-              <RankIcon division={division} size={52} />
+            <div style={{
+              border: `2px solid ${color}`,
+              boxShadow: `0 0 8px ${color}80, inset 0 0 6px ${color}20`,
+              background: "hsl(var(--paper))",
+              padding: 2,
+            }}>
+              <RankIcon division={division} size={48} />
             </div>
             <div className="flex flex-col justify-center">
               <div style={{ fontSize: 7, opacity: 0.7, letterSpacing: "0.15em" }}>
