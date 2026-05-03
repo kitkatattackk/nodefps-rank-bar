@@ -5,6 +5,12 @@ export default async function handler(req: Request) {
   const name = url.searchParams.get("name") ?? "nodefps";
   const mode = url.searchParams.get("mode") ?? "zb";
 
+  // TODO: remove mock data once TRN API is approved for production
+  return Response.json({
+    error: null,
+    stats: { division: "Elite 1", pct: 13, kd: 14.70 },
+  });
+
   const apiKey = process.env.TRN_API_KEY;
   if (!apiKey) {
     return Response.json({ error: "API key not configured", stats: null }, { status: 500 });
