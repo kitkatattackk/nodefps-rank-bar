@@ -8,7 +8,7 @@ export default async function handler(req: Request) {
   // TODO: remove mock data once TRN API is approved for production
   return Response.json({
     error: null,
-    stats: { division: "Elite 1", pct: 13, kd: 14.70 },
+    stats: { division: "Unreal", pct: 67, kd: 14.70 },
   });
 
   const apiKey = process.env.TRN_API_KEY;
