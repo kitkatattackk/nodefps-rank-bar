@@ -59,23 +59,19 @@ function useQueryParam(key: string, fallback: string) {
 
 function Index() {
   const [name] = useState(() => useQueryParam("name", "nodeFPS"));
-  const [accountType] = useState(
-    () => (useQueryParam("type", "epic") as "epic" | "xbl" | "psn"),
-  );
-  const mode = useQueryParam("mode", "zb"); // "br" or "zb"
+  const mode = useQueryParam("mode", "zb");
   const transparent = useQueryParam("bg", "1") === "0";
 
-  // Manual rank override via URL params: ?rank=Elite+1&pct=13
-  const rankOverride = useQueryParam("rank", "");
-  const pctOverride = useQueryParam("pct", "");
-
-  const [data, setData] = useState<{ error: string | null; stats: { kd: number } | null } | null>(null);
+  const [data, setData] = useState<{
+    error: string | null;
+    stats: { division: string; pct: number; kd: number } | null;
+  } | null>(null);
 
   const load = useCallback(async () => {
-    const res = await fetch(`/api/stats?name=${encodeURIComponent(name)}&accountType=${accountType}`);
+    const res = await fetch(`/api/stats?name=${encodeURIComponent(name)}&mode=${mode}`);
     const json = await res.json();
     setData(json);
-  }, [name, accountType]);
+  }, [name, mode]);
 
   useEffect(() => {
     load();
@@ -90,8 +86,8 @@ function Index() {
     }
   }, [transparent]);
 
-  const division: string = rankOverride || "Unranked";
-  const pct: number = pctOverride ? Math.min(100, Math.max(0, parseInt(pctOverride, 10))) : 0;
+  const division: string = data?.stats?.division ?? "Unranked";
+  const pct: number = data?.stats?.pct ?? 0;
   const color = rankColor(division);
   const targetKd = data?.stats?.kd ?? 0;
   const [displayKd, setDisplayKd] = useState(targetKd);
