@@ -41,6 +41,7 @@ Displays your current Fortnite rank, promotion progress, and K/D ratio directly 
 3. Hit **COPY** — your browser source URL is ready
 4. In OBS: **Add Source → Browser Source → paste URL**
 5. Use browser size **1920 × 1080** for auto-scale, or exact style sizes if preferred
+6. Update manually through `/config`, or quote automation separately if API/account access supports it
 
 For Meld, keep the browser layer size at **1920 × 1080** and resize the layer on the canvas.
 
@@ -81,7 +82,6 @@ Sub-divisions (1/2/3) are supported — e.g. `Diamond 3`, `Gold 1`.
 ## Features
 
 - **Animated K/D counter** — smooth eased animation when K/D changes, color flash on update
-- **Auto-refresh** — polls for new stats every 30 seconds
 - **Pixel-art HUD aesthetic** — Press Start 2P font, chunky progress bar, corner markers
 - **Per-rank glow** — radial gradient glow behind each rank icon in the rank's accent color
 - **Transparent background** — add `?bg=0` to remove the beige background for OBS overlaying
@@ -89,12 +89,17 @@ Sub-divisions (1/2/3) are supported — e.g. `Diamond 3`, `Gold 1`.
 - **ZB + BR modes** — separate ranked segments for Zero Build and Battle Royale
 - **Config UI** — no-code URL builder with live preview
 - **Setup + listing pages** — ready-to-send buyer guide and seller copy/fulfillment kit
+- **Automation-ready positioning** — manual updates today, with optional custom automation when API/account access supports it
 
 ---
 
-## Stats API
+## Manual Updates And Automation
 
-Stats are fetched from the [Tracker.gg API](https://tracker.gg/developers). The free tier blocks server-side requests, so the app currently serves **mock data** until TRN production API access is approved.
+The Etsy-ready product is manual-update by default: open `/config`, adjust rank/progress/K/D, copy the new browser-source URL, and replace it in OBS, Meld, or Streamlabs.
+
+Automation can be offered as a custom upgrade only when the target stats API and buyer account setup support it. Do not promise hands-free updates in the base listing; position it as "message me first so I can confirm what is possible."
+
+Stats API work is staged through the [Tracker.gg API](https://tracker.gg/developers). The free tier blocks server-side requests, so the app currently serves **mock data** until TRN production API access is approved.
 
 **To enable live stats once approved:**  
 Remove the mock `return` block at the top of `api/stats.ts` and set `TRN_API_KEY` in your Vercel environment variables.

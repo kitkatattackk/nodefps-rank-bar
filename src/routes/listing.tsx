@@ -100,6 +100,9 @@ What you get:
 - Auto-scaling URL for large browser sources, including Meld 1920 x 1080
 - Buyer setup guide with troubleshooting notes
 
+Automation note:
+This version is designed for quick manual updates through the config page. Automated stat syncing may be available as a future/custom upgrade depending on API access and the buyer's account/game setup. If you want automatic rank/KD updates instead of manual changes, message me before ordering and I can confirm what is possible.
+
 How it works:
 1. Open your setup link.
 2. Build your overlay URL in the config page.
@@ -115,6 +118,8 @@ Here is your setup guide:
 
 Open that page first. It has the config page link, recommended OBS/Meld/Streamlabs settings, style sizes, and troubleshooting notes.
 
+This order uses manual updates through the config page. If you want automated stat syncing later, message me and I can check whether it is possible for your account/setup.
+
 Quick Meld note: paste the generated URL into a Browser layer, keep browser size at 1920 x 1080, then resize the layer on your scene.`;
 
 const DEMO_SHOT_LIST = `Record a 20-30 second listing demo:
@@ -126,7 +131,7 @@ const DEMO_SHOT_LIST = `Record a 20-30 second listing demo:
 5. Resize the layer to show it stays crisp.
 
 Caption idea:
-"Paste into OBS, Meld, or Streamlabs as a browser source. Includes transparent background and auto scaling."`;
+"Paste into OBS, Meld, or Streamlabs as a browser source. Includes transparent background, auto scaling, and optional automation possibilities for future/custom setups."`;
 
 export default function Listing() {
   useEffect(() => {
@@ -139,7 +144,9 @@ export default function Listing() {
   }, []);
 
   const baseUrl =
-    typeof window !== "undefined" ? window.location.origin : "https://nodefps-rank-bar.vercel.app";
+    typeof window !== "undefined"
+      ? window.location.origin
+      : "https://rankforge-stream-overlay.vercel.app";
 
   return (
     <main
@@ -196,6 +203,15 @@ export default function Listing() {
 
       <Section title="FULFILLMENT">
         <CopyBlock label="BUYER MESSAGE" value={FULFILLMENT_MESSAGE} />
+      </Section>
+
+      <Section title="AUTOMATION POSITIONING">
+        <CopyBlock
+          label="SAVED REPLY"
+          value={`Right now the overlay is manual-update: open the config page, change rank/K/D, copy the new URL, and paste it into your browser source.
+
+Automation may be possible as a custom upgrade if the stats API/account setup supports it. If you want that, send your platform/account details first and I can confirm before quoting or promising it.`}
+        />
       </Section>
 
       <Section title="DEMO VIDEO">

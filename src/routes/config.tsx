@@ -321,6 +321,24 @@ function Config() {
           </div>
         </div>
 
+        <div
+          style={{
+            background: BG2,
+            border: `1px solid ${GOLD}33`,
+            padding: 14,
+            display: "flex",
+            flexDirection: "column",
+            gap: 9,
+          }}
+        >
+          <div style={{ color: GOLD, fontSize: 6, letterSpacing: "0.18em" }}>AUTOMATION OPTION</div>
+          <div style={{ color: DIM, fontSize: 5, letterSpacing: "0.07em", lineHeight: 1.9 }}>
+            This generator is manual-update by default. Automated stat syncing may be possible as a
+            custom upgrade when API access and account setup support it. Ask before promising
+            hands-free updates to a buyer.
+          </div>
+        </div>
+
         {/* URL output + copy */}
         <div>
           <label style={labelStyle}>OBS BROWSER SOURCE URL</label>
@@ -425,6 +443,7 @@ function Config() {
             ],
             ["BLURRY", "Resize the source layer, not the browser viewport down to a tiny size."],
             ["VISIBLE BG", "The URL should include bg=0 for transparent background."],
+            ["AUTOMATION", "Manual by default; custom automation depends on API/account support."],
           ].map(([title, desc]) => (
             <div
               key={title}

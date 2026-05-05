@@ -164,7 +164,9 @@ export default function Setup() {
   }, []);
 
   const baseUrl =
-    typeof window !== "undefined" ? window.location.origin : "https://nodefps-rank-bar.vercel.app";
+    typeof window !== "undefined"
+      ? window.location.origin
+      : "https://rankforge-stream-overlay.vercel.app";
   const configUrl = `${baseUrl}/config`;
 
   return (
@@ -292,6 +294,33 @@ export default function Setup() {
         </div>
       </Section>
 
+      <Section title="AUTOMATION OPTION">
+        <div
+          style={{
+            background: `${GOLD}0e`,
+            border: `1px solid ${GOLD}44`,
+            padding: 16,
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+          }}
+        >
+          <div style={{ color: GOLD, fontSize: 7, letterSpacing: "0.14em" }}>MANUAL TODAY</div>
+          <div style={{ color: DIM, fontSize: 6, letterSpacing: "0.08em", lineHeight: 2 }}>
+            This version is built for fast manual updates: open config, change your stats, copy the
+            new URL, and replace it in your browser source.
+          </div>
+          <div style={{ color: GOLD, fontSize: 7, letterSpacing: "0.14em", marginTop: 4 }}>
+            AUTOMATION MAY BE POSSIBLE
+          </div>
+          <div style={{ color: DIM, fontSize: 6, letterSpacing: "0.08em", lineHeight: 2 }}>
+            Automatic rank/K/D syncing can be explored as a custom upgrade when API access and your
+            account setup support it. Message the seller before ordering automation so they can
+            confirm what is available.
+          </div>
+        </div>
+      </Section>
+
       <Section title="STYLE SIZES">
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {[
@@ -328,6 +357,10 @@ export default function Setup() {
             [
               "RANK CHANGED",
               "Open config, update stats, copy the new URL, replace the browser URL.",
+            ],
+            [
+              "WANT AUTOMATION",
+              "Ask about a custom upgrade. Availability depends on API/account support.",
             ],
             ["STILL STUCK", "Send a screenshot of your source settings with your Etsy message."],
           ].map(([title, desc]) => (
