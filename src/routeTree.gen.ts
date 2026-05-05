@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SetupRouteImport } from './routes/setup'
 import { Route as PreviewRouteImport } from './routes/preview'
 import { Route as OverviewRouteImport } from './routes/overview'
+import { Route as ListingRouteImport } from './routes/listing'
 import { Route as ConfigRouteImport } from './routes/config'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -30,6 +31,11 @@ const OverviewRoute = OverviewRouteImport.update({
   path: '/overview',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ListingRoute = ListingRouteImport.update({
+  id: '/listing',
+  path: '/listing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConfigRoute = ConfigRouteImport.update({
   id: '/config',
   path: '/config',
@@ -44,6 +50,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/config': typeof ConfigRoute
+  '/listing': typeof ListingRoute
   '/overview': typeof OverviewRoute
   '/preview': typeof PreviewRoute
   '/setup': typeof SetupRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/config': typeof ConfigRoute
+  '/listing': typeof ListingRoute
   '/overview': typeof OverviewRoute
   '/preview': typeof PreviewRoute
   '/setup': typeof SetupRoute
@@ -59,21 +67,30 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/config': typeof ConfigRoute
+  '/listing': typeof ListingRoute
   '/overview': typeof OverviewRoute
   '/preview': typeof PreviewRoute
   '/setup': typeof SetupRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/config' | '/overview' | '/preview' | '/setup'
+  fullPaths: '/' | '/config' | '/listing' | '/overview' | '/preview' | '/setup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/config' | '/overview' | '/preview' | '/setup'
-  id: '__root__' | '/' | '/config' | '/overview' | '/preview' | '/setup'
+  to: '/' | '/config' | '/listing' | '/overview' | '/preview' | '/setup'
+  id:
+    | '__root__'
+    | '/'
+    | '/config'
+    | '/listing'
+    | '/overview'
+    | '/preview'
+    | '/setup'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ConfigRoute: typeof ConfigRoute
+  ListingRoute: typeof ListingRoute
   OverviewRoute: typeof OverviewRoute
   PreviewRoute: typeof PreviewRoute
   SetupRoute: typeof SetupRoute
@@ -102,6 +119,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OverviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/listing': {
+      id: '/listing'
+      path: '/listing'
+      fullPath: '/listing'
+      preLoaderRoute: typeof ListingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/config': {
       id: '/config'
       path: '/config'
@@ -122,6 +146,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ConfigRoute: ConfigRoute,
+  ListingRoute: ListingRoute,
   OverviewRoute: OverviewRoute,
   PreviewRoute: PreviewRoute,
   SetupRoute: SetupRoute,

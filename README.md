@@ -3,7 +3,9 @@
 A real-time Fortnite ranked stats overlay for OBS, Meld, and Streamlabs — built as a browser source widget with a pixel-art HUD aesthetic.
 
 **Live demo & overview → `/overview`**  
-**Config builder → `/config`**
+**Config builder → `/config`**  
+**Buyer setup guide → `/setup`**  
+**Seller listing kit → `/listing`**
 
 ---
 
@@ -26,6 +28,8 @@ Displays your current Fortnite rank, promotion progress, and K/D ratio directly 
 | `/overview` | Product overview — all styles, features, how it works |
 | `/preview` | Side-by-side preview of all 3 widget styles |
 | `/config` | Interactive config builder — generates your OBS URL |
+| `/setup` | Buyer-facing setup guide with source settings and troubleshooting |
+| `/listing` | Seller-facing Etsy copy, fulfillment message, and demo shot list |
 | `/` | The widget itself (used as your OBS browser source URL) |
 
 ---
@@ -36,7 +40,9 @@ Displays your current Fortnite rank, promotion progress, and K/D ratio directly 
 2. Choose your rank, progress %, K/D, mode (ZB/BR), and style
 3. Hit **COPY** — your browser source URL is ready
 4. In OBS: **Add Source → Browser Source → paste URL**
-5. Set the browser source dimensions to match your chosen style (shown in the config UI)
+5. Use browser size **1920 × 1080** for auto-scale, or exact style sizes if preferred
+
+For Meld, keep the browser layer size at **1920 × 1080** and resize the layer on the canvas.
 
 ---
 
@@ -51,12 +57,13 @@ The widget is controlled entirely via URL params — no login, no account needed
 | `kd` | e.g. `3.85` | K/D ratio |
 | `mode` | `zb` / `br` | Zero Build or Battle Royale |
 | `style` | `full` / `compact` / `micro` | Widget style |
+| `scale` | `auto` / number | Auto-scales for large browser sources; numeric values force scale |
 | `bg` | `1` (default) / `0` | `0` = transparent background |
 | `name` | Epic username | Player to fetch stats for (when API is live) |
 
 **Example URL:**
 ```
-https://your-site.vercel.app/?rank=Unreal&pct=67&kd=14.70&style=full&mode=zb&bg=0
+https://your-site.vercel.app/?rank=Unreal&pct=67&kd=14.70&style=full&mode=zb&scale=auto&bg=0
 ```
 
 ---
@@ -78,8 +85,10 @@ Sub-divisions (1/2/3) are supported — e.g. `Diamond 3`, `Gold 1`.
 - **Pixel-art HUD aesthetic** — Press Start 2P font, chunky progress bar, corner markers
 - **Per-rank glow** — radial gradient glow behind each rank icon in the rank's accent color
 - **Transparent background** — add `?bg=0` to remove the beige background for OBS overlaying
+- **Meld auto-scaling** — generated URLs include `scale=auto` so large browser sources render crisp
 - **ZB + BR modes** — separate ranked segments for Zero Build and Battle Royale
 - **Config UI** — no-code URL builder with live preview
+- **Setup + listing pages** — ready-to-send buyer guide and seller copy/fulfillment kit
 
 ---
 
@@ -127,6 +136,8 @@ The app runs at `http://localhost:5173`.
 - Widget: `http://localhost:5173/?rank=Unreal&pct=67&kd=14.70&style=full&bg=0`
 - Overview: `http://localhost:5173/overview`
 - Config: `http://localhost:5173/config`
+- Setup: `http://localhost:5173/setup?for=Streamer`
+- Listing kit: `http://localhost:5173/listing`
 - Preview: `http://localhost:5173/preview`
 
 ---
