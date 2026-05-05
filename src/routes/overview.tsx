@@ -616,73 +616,8 @@ export default function Overview() {
               badgeColor={DIM}
               desc="Visual flash + sound effect triggered automatically when you rank up mid-stream."
             />
-            <UpcomingCard
-              icon="◈"
-              iconColor={DIM}
-              title="CUSTOM THEMES"
-              badge="PLANNED"
-              badgeColor={DIM}
-              desc="Choose from multiple HUD color themes or build your own to match your stream branding."
-            />
-            <UpcomingCard
-              icon="⊕"
-              iconColor={DIM}
-              title="MORE GAMES"
-              badge="PLANNED"
-              badgeColor={DIM}
-              desc="Rocket League, Apex Legends, and Valorant rank overlays using the same pixel-art style."
-            />
           </div>
         </Section>
-      </div>
-
-      {/* ── DIVIDER ── */}
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 700,
-          height: 1,
-          background: `linear-gradient(90deg, transparent, ${DIM}44, transparent)`,
-        }}
-      />
-
-      {/* ── FOOTER ── */}
-      <div
-        style={{
-          display: "flex",
-          gap: 16,
-          flexWrap: "wrap" as const,
-          justifyContent: "center",
-          marginTop: 8,
-        }}
-      >
-        <a
-          href="/preview"
-          style={{
-            color: DIM,
-            fontSize: 6,
-            letterSpacing: "0.15em",
-            textDecoration: "none",
-            border: `1px solid ${DIM}44`,
-            padding: "6px 14px",
-          }}
-        >
-          VIEW PREVIEW
-        </a>
-        <a
-          href="/config"
-          style={{
-            color: GOLD,
-            fontSize: 6,
-            letterSpacing: "0.15em",
-            textDecoration: "none",
-            border: `1px solid ${GOLD}55`,
-            padding: "6px 14px",
-            background: `${GOLD}12`,
-          }}
-        >
-          BUILD YOUR URL →
-        </a>
       </div>
     </main>
   );
