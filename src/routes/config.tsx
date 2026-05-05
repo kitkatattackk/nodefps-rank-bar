@@ -5,40 +5,50 @@ export const Route = createFileRoute("/config")({
   component: Config,
 });
 
-const BG  = "#181510";
+const BG = "#181510";
 const BG2 = "#201c14";
 const GOLD = "#c9a84c";
-const DIM  = "#6b5f3e";
+const DIM = "#6b5f3e";
 const FRAME = "#2e2a1f";
 
 const RANKS = [
-  "Bronze 1", "Bronze 2", "Bronze 3",
-  "Silver 1", "Silver 2", "Silver 3",
-  "Gold 1",   "Gold 2",   "Gold 3",
-  "Platinum 1", "Platinum 2", "Platinum 3",
-  "Diamond 1",  "Diamond 2",  "Diamond 3",
+  "Bronze 1",
+  "Bronze 2",
+  "Bronze 3",
+  "Silver 1",
+  "Silver 2",
+  "Silver 3",
+  "Gold 1",
+  "Gold 2",
+  "Gold 3",
+  "Platinum 1",
+  "Platinum 2",
+  "Platinum 3",
+  "Diamond 1",
+  "Diamond 2",
+  "Diamond 3",
   "Elite",
   "Champion",
   "Unreal",
 ];
 
 const OBS_SIZES: Record<string, string> = {
-  full:    "540 × 80px",
+  full: "540 × 80px",
   compact: "340 × 36px",
-  micro:   "220 × 30px",
+  micro: "220 × 30px",
 };
 
 const IFRAME_DIMS: Record<string, { w: number; h: number }> = {
-  full:    { w: 580, h: 110 },
-  compact: { w: 420, h: 70  },
-  micro:   { w: 320, h: 60  },
+  full: { w: 580, h: 110 },
+  compact: { w: 420, h: 70 },
+  micro: { w: 320, h: 60 },
 };
 
 function Config() {
-  const [rank,  setRank]  = useState("Unreal");
-  const [pct,   setPct]   = useState(67);
-  const [kd,    setKd]    = useState("14.70");
-  const [mode,  setMode]  = useState("zb");
+  const [rank, setRank] = useState("Unreal");
+  const [pct, setPct] = useState(67);
+  const [kd, setKd] = useState("14.70");
+  const [mode, setMode] = useState("zb");
   const [style, setStyle] = useState("full");
   const [copied, setCopied] = useState(false);
 
@@ -51,17 +61,16 @@ function Config() {
     };
   }, []);
 
-  const baseUrl = typeof window !== "undefined"
-    ? `${window.location.origin}/`
-    : "/";
+  const baseUrl = typeof window !== "undefined" ? `${window.location.origin}/` : "/";
 
   const params = new URLSearchParams({
     rank,
-    pct:   String(pct),
+    pct: String(pct),
     kd,
     mode,
     style,
-    bg:    "0",
+    scale: "auto",
+    bg: "0",
   });
 
   const obsUrl = `${baseUrl}?${params.toString()}`;
@@ -83,7 +92,7 @@ function Config() {
     padding: "6px 10px",
     outline: "none",
     width: "100%",
-    appearance: "none" as any,
+    appearance: "none",
   };
 
   const labelStyle: React.CSSProperties = {
@@ -107,41 +116,45 @@ function Config() {
   });
 
   return (
-    <main style={{
-      minHeight: "100vh",
-      background: `linear-gradient(160deg, ${BG2} 0%, ${BG} 60%)`,
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      padding: "48px 24px",
-      fontFamily: "'Press Start 2P', monospace",
-      gap: 40,
-    }}>
+    <main
+      style={{
+        minHeight: "100vh",
+        background: `linear-gradient(160deg, ${BG2} 0%, ${BG} 60%)`,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "48px 24px",
+        fontFamily: "'Press Start 2P', monospace",
+        gap: 40,
+      }}
+    >
       {/* Header */}
       <div style={{ textAlign: "center" }}>
-        <div style={{ color: GOLD, fontSize: 13, letterSpacing: "0.25em" }}>
-          OVERLAY CONFIG
-        </div>
+        <div style={{ color: GOLD, fontSize: 13, letterSpacing: "0.25em" }}>OVERLAY CONFIG</div>
         <div style={{ color: DIM, fontSize: 7, letterSpacing: "0.2em", marginTop: 10 }}>
           BUILD YOUR OBS URL
         </div>
       </div>
 
-      <div style={{
-        width: "100%",
-        maxWidth: 560,
-        display: "flex",
-        flexDirection: "column",
-        gap: 28,
-      }}>
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 560,
+          display: "flex",
+          flexDirection: "column",
+          gap: 28,
+        }}
+      >
         {/* Row 1: Rank + Mode */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           {/* Rank */}
           <div>
             <label style={labelStyle}>RANK</label>
-            <select value={rank} onChange={e => setRank(e.target.value)} style={inputStyle}>
-              {RANKS.map(r => (
-                <option key={r} value={r}>{r}</option>
+            <select value={rank} onChange={(e) => setRank(e.target.value)} style={inputStyle}>
+              {RANKS.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
               ))}
             </select>
           </div>
@@ -150,8 +163,12 @@ function Config() {
           <div>
             <label style={labelStyle}>MODE</label>
             <div style={{ display: "flex" }}>
-              <button onClick={() => setMode("zb")} style={segBtnStyle(mode === "zb")}>ZB</button>
-              <button onClick={() => setMode("br")} style={segBtnStyle(mode === "br")}>BR</button>
+              <button onClick={() => setMode("zb")} style={segBtnStyle(mode === "zb")}>
+                ZB
+              </button>
+              <button onClick={() => setMode("br")} style={segBtnStyle(mode === "br")}>
+                BR
+              </button>
             </div>
           </div>
         </div>
@@ -163,9 +180,10 @@ function Config() {
             <label style={labelStyle}>PROGRESS — {pct}%</label>
             <input
               type="range"
-              min={0} max={100}
+              min={0}
+              max={100}
               value={pct}
-              onChange={e => setPct(Number(e.target.value))}
+              onChange={(e) => setPct(Number(e.target.value))}
               style={{ width: "100%", accentColor: GOLD, cursor: "pointer" }}
             />
           </div>
@@ -175,9 +193,10 @@ function Config() {
             <label style={labelStyle}>K/D RATIO</label>
             <input
               type="number"
-              min={0} step={0.01}
+              min={0}
+              step={0.01}
               value={kd}
-              onChange={e => setKd(e.target.value)}
+              onChange={(e) => setKd(e.target.value)}
               style={inputStyle}
             />
           </div>
@@ -187,7 +206,7 @@ function Config() {
         <div>
           <label style={labelStyle}>STYLE</label>
           <div style={{ display: "flex" }}>
-            {(["full", "compact", "micro"] as const).map(s => (
+            {(["full", "compact", "micro"] as const).map((s) => (
               <button key={s} onClick={() => setStyle(s)} style={segBtnStyle(style === s)}>
                 {s.toUpperCase()}
               </button>
@@ -196,20 +215,27 @@ function Config() {
         </div>
 
         {/* Divider */}
-        <div style={{ height: 1, background: `linear-gradient(90deg, transparent, ${DIM}44, transparent)` }} />
+        <div
+          style={{
+            height: 1,
+            background: `linear-gradient(90deg, transparent, ${DIM}44, transparent)`,
+          }}
+        />
 
         {/* Live Preview */}
         <div>
           <label style={labelStyle}>LIVE PREVIEW</label>
-          <div style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            minHeight: 90,
-            background: FRAME,
-            border: `2px solid ${DIM}44`,
-            padding: 16,
-          }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: 90,
+              background: FRAME,
+              border: `2px solid ${DIM}44`,
+              padding: 16,
+            }}
+          >
             <iframe
               key={obsUrl}
               src={obsUrl}
@@ -236,17 +262,19 @@ function Config() {
         <div>
           <label style={labelStyle}>OBS BROWSER SOURCE URL</label>
           <div style={{ display: "flex", gap: 8 }}>
-            <div style={{
-              flex: 1,
-              background: FRAME,
-              border: `2px solid ${DIM}44`,
-              padding: "8px 10px",
-              color: DIM,
-              fontSize: 7,
-              letterSpacing: "0.05em",
-              wordBreak: "break-all",
-              lineHeight: 1.8,
-            }}>
+            <div
+              style={{
+                flex: 1,
+                background: FRAME,
+                border: `2px solid ${DIM}44`,
+                padding: "8px 10px",
+                color: DIM,
+                fontSize: 7,
+                letterSpacing: "0.05em",
+                wordBreak: "break-all",
+                lineHeight: 1.8,
+              }}
+            >
               {obsUrl}
             </div>
             <button
@@ -270,7 +298,16 @@ function Config() {
         </div>
 
         {/* Footer hint */}
-        <div style={{ color: DIM, fontSize: 6, letterSpacing: "0.12em", textAlign: "center", opacity: 0.6, lineHeight: 2 }}>
+        <div
+          style={{
+            color: DIM,
+            fontSize: 6,
+            letterSpacing: "0.12em",
+            textAlign: "center",
+            opacity: 0.6,
+            lineHeight: 2,
+          }}
+        >
           PASTE THIS URL INTO YOUR OBS / MELD / STREAMLABS BROWSER SOURCE
         </div>
       </div>

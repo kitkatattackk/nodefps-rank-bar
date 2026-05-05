@@ -6,14 +6,14 @@ export const Route = createFileRoute("/")({
 });
 
 const RANK_COLORS: Record<string, string> = {
-  bronze:   "#b5651d",  // darker bronze — readable on beige
-  silver:   "#7a7a8c",  // muted slate — not washed out on light bg
-  gold:     "#c8820a",  // deep amber-gold — high contrast on beige
-  platinum: "#2aaba2",  // slightly deepened teal
-  diamond:  "#4080c0",  // slightly deeper blue
-  elite:    "#d946a8",
+  bronze: "#b5651d", // darker bronze — readable on beige
+  silver: "#7a7a8c", // muted slate — not washed out on light bg
+  gold: "#c8820a", // deep amber-gold — high contrast on beige
+  platinum: "#2aaba2", // slightly deepened teal
+  diamond: "#4080c0", // slightly deeper blue
+  elite: "#d946a8",
   champion: "#e84c1e",
-  unreal:   "#5548d9",
+  unreal: "#5548d9",
 };
 
 function rankKey(division?: string | null): string | null {
@@ -27,15 +27,25 @@ function rankColor(division?: string | null) {
 }
 
 const RANK_IMAGES: Record<string, string> = {
-  bronze:   "/ranks/fortnite-bronze-2.webp",
-  silver:   "/ranks/fortnite-silver-3.webp",
-  gold:     "/ranks/fortnite-gold-3.webp",
+  bronze: "/ranks/fortnite-bronze-2.webp",
+  silver: "/ranks/fortnite-silver-3.webp",
+  gold: "/ranks/fortnite-gold-3.webp",
   platinum: "/ranks/fortnite-platinum-3.webp",
-  diamond:  "/ranks/fortnite-diamond-3.webp",
-  elite:    "/ranks/Elite_-_Icon_-_Fortnite.webp",
+  diamond: "/ranks/fortnite-diamond-3.webp",
+  elite: "/ranks/Elite_-_Icon_-_Fortnite.webp",
   champion: "/ranks/fortnite-champion.webp",
-  unreal:   "/ranks/unreal.png",
+  unreal: "/ranks/unreal.png",
 };
+
+const STYLE_SIZES: Record<string, { w: number; h: number; maxScale: number }> = {
+  full: { w: 540, h: 80, maxScale: 3 },
+  compact: { w: 340, h: 36, maxScale: 4 },
+  micro: { w: 220, h: 30, maxScale: 4 },
+};
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
 
 function RankIcon({ division, size = 40 }: { division: string; size?: number }) {
   const key = rankKey(division);
@@ -56,13 +66,15 @@ function GlowIcon({ division, size, color }: { division: string; size: number; c
   return (
     <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
       {/* Radial glow layer behind the icon — doesn't follow image bounding box */}
-      <div style={{
-        position: "absolute",
-        inset: -size * 0.35,
-        background: `radial-gradient(circle, ${color}90 0%, ${color}40 40%, transparent 70%)`,
-        filter: `blur(${Math.round(size * 0.22)}px)`,
-        pointerEvents: "none",
-      }} />
+      <div
+        style={{
+          position: "absolute",
+          inset: -size * 0.35,
+          background: `radial-gradient(circle, ${color}90 0%, ${color}40 40%, transparent 70%)`,
+          filter: `blur(${Math.round(size * 0.22)}px)`,
+          pointerEvents: "none",
+        }}
+      />
       <div style={{ position: "relative" }}>
         <RankIcon division={division} size={size} />
       </div>
@@ -75,6 +87,44 @@ function useQueryParam(key: string, fallback: string) {
   return new URLSearchParams(window.location.search).get(key) || fallback;
 }
 
+function useOverlayScale(style: string) {
+  const scaleParam = useQueryParam("scale", "auto");
+  const [viewport, setViewport] = useState(() => ({
+    w: typeof window === "undefined" ? STYLE_SIZES.full.w : window.innerWidth,
+    h: typeof window === "undefined" ? STYLE_SIZES.full.h : window.innerHeight,
+  }));
+
+  useEffect(() => {
+    const update = () => setViewport({ w: window.innerWidth, h: window.innerHeight });
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  const numericScale = Number(scaleParam);
+  if (Number.isFinite(numericScale) && numericScale > 0) {
+    return clamp(numericScale, 0.25, 6);
+  }
+
+  const { w, h, maxScale } = STYLE_SIZES[style] ?? STYLE_SIZES.full;
+  const fit = Math.min((viewport.w - 24) / w, (viewport.h - 24) / h);
+  return clamp(Math.floor(fit), 1, maxScale);
+}
+
+function ScaledOverlay({ scale, children }: { scale: number; children: React.ReactNode }) {
+  return (
+    <div
+      style={
+        {
+          zoom: scale,
+        } as React.CSSProperties & { zoom: number }
+      }
+    >
+      {children}
+    </div>
+  );
+}
+
 function Index() {
   // Redirect bare visits (no overlay params) to the overview page
   useEffect(() => {
@@ -83,15 +133,16 @@ function Index() {
     }
   }, []);
 
-  const [name] = useState(() => useQueryParam("name", "nodeFPS"));
+  const name = useQueryParam("name", "nodeFPS");
   const mode = useQueryParam("mode", "zb");
   const transparent = useQueryParam("bg", "1") === "0";
   const style = useQueryParam("style", "full");
+  const overlayScale = useOverlayScale(style);
 
   // Manual fallbacks for local dev / preview (?rank=Elite+1&pct=13&kd=3.50)
   const rankOverride = useQueryParam("rank", "");
-  const pctOverride  = useQueryParam("pct", "");
-  const kdOverride   = useQueryParam("kd", "");
+  const pctOverride = useQueryParam("pct", "");
+  const kdOverride = useQueryParam("kd", "");
 
   const [data, setData] = useState<{
     error: string | null;
@@ -151,35 +202,40 @@ function Index() {
   // ─────────────────────────────────────────────
   if (style === "micro") {
     return (
-      <main className="min-h-screen flex items-center justify-center" style={{
-        background: "transparent",
-        fontFamily: "'Press Start 2P', monospace",
-      }}>
-        <div
-          className="flex items-center gap-2 px-2 py-1"
-          style={{
-            background: "hsl(var(--paper))",
-            border: "2px solid hsl(var(--frame))",
-            color: "hsl(var(--frame))",
-          }}
-        >
-          <GlowIcon division={division} size={20} color={color} />
-          <span className="uppercase" style={{ color, fontSize: 9, whiteSpace: "nowrap" }}>
-            {division}
-          </span>
-          <span style={{ opacity: 0.4, fontSize: 8 }}>|</span>
-          <span
-            className="tabular-nums"
+      <main
+        className="min-h-screen flex items-center justify-center"
+        style={{
+          background: "transparent",
+          fontFamily: "'Press Start 2P', monospace",
+        }}
+      >
+        <ScaledOverlay scale={overlayScale}>
+          <div
+            className="flex items-center gap-2 px-2 py-1"
             style={{
-              fontSize: 9,
-              color: flash ? color : "inherit",
-              transition: "color 0.3s",
-              whiteSpace: "nowrap",
+              background: "hsl(var(--paper))",
+              border: "2px solid hsl(var(--frame))",
+              color: "hsl(var(--frame))",
             }}
           >
-            {displayKd.toFixed(2)} K/D
-          </span>
-        </div>
+            <GlowIcon division={division} size={20} color={color} />
+            <span className="uppercase" style={{ color, fontSize: 9, whiteSpace: "nowrap" }}>
+              {division}
+            </span>
+            <span style={{ opacity: 0.4, fontSize: 8 }}>|</span>
+            <span
+              className="tabular-nums"
+              style={{
+                fontSize: 9,
+                color: flash ? color : "inherit",
+                transition: "color 0.3s",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {displayKd.toFixed(2)} K/D
+            </span>
+          </div>
+        </ScaledOverlay>
       </main>
     );
   }
@@ -198,60 +254,60 @@ function Index() {
           fontFamily: "'Press Start 2P', monospace",
         }}
       >
-        <div
-          className="flex items-center gap-3 px-3 py-1"
-          style={{
-            background: "hsl(var(--paper))",
-            border: "2px solid hsl(var(--frame))",
-            color: "hsl(var(--frame))",
-          }}
-        >
-          {/* Rank icon */}
-          <GlowIcon division={division} size={28} color={color} />
-
-          {/* Rank name */}
-          <span
-            className="uppercase"
-            style={{ color, fontSize: 11, whiteSpace: "nowrap" }}
-          >
-            {division}
-          </span>
-
-          {/* Mini progress bar */}
+        <ScaledOverlay scale={overlayScale}>
           <div
-            className="flex gap-[2px]"
+            className="flex items-center gap-3 px-3 py-1"
             style={{
-              padding: 2,
+              background: "hsl(var(--paper))",
               border: "2px solid hsl(var(--frame))",
-              background: "hsl(var(--frame) / 0.1)",
+              color: "hsl(var(--frame))",
             }}
           >
-            {Array.from({ length: 10 }).map((_, i) => (
-              <div
-                key={i}
-                style={{
-                  width: 6,
-                  height: 6,
-                  background: i < Math.round((pct / 100) * 10) ? color : "hsl(var(--frame) / 0.15)",
-                }}
-              />
-            ))}
-          </div>
+            {/* Rank icon */}
+            <GlowIcon division={division} size={28} color={color} />
 
-          {/* K/D */}
-          <span
-            className="tabular-nums"
-            style={{
-              fontSize: 11,
-              color: flash ? color : "inherit",
-              transition: "color 0.3s",
-              background: flash ? `${color}22` : "transparent",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {displayKd.toFixed(2)} K/D
-          </span>
-        </div>
+            {/* Rank name */}
+            <span className="uppercase" style={{ color, fontSize: 11, whiteSpace: "nowrap" }}>
+              {division}
+            </span>
+
+            {/* Mini progress bar */}
+            <div
+              className="flex gap-[2px]"
+              style={{
+                padding: 2,
+                border: "2px solid hsl(var(--frame))",
+                background: "hsl(var(--frame) / 0.1)",
+              }}
+            >
+              {Array.from({ length: 10 }).map((_, i) => (
+                <div
+                  key={i}
+                  style={{
+                    width: 6,
+                    height: 6,
+                    background:
+                      i < Math.round((pct / 100) * 10) ? color : "hsl(var(--frame) / 0.15)",
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* K/D */}
+            <span
+              className="tabular-nums"
+              style={{
+                fontSize: 11,
+                color: flash ? color : "inherit",
+                transition: "color 0.3s",
+                background: flash ? `${color}22` : "transparent",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {displayKd.toFixed(2)} K/D
+            </span>
+          </div>
+        </ScaledOverlay>
       </main>
     );
   }
@@ -270,126 +326,146 @@ function Index() {
         imageRendering: "pixelated",
       }}
     >
-      {/* Pixel-art frame: outer dark border + inner paper, layered like the overlay */}
-      <div
-        className="relative"
-        style={{
-          width: 520,
-          padding: 4,
-          background: "hsl(var(--frame))",
-          boxShadow:
-            "0 0 0 4px hsl(var(--paper)), 0 0 0 8px hsl(var(--frame))",
-        }}
-      >
+      <ScaledOverlay scale={overlayScale}>
+        {/* Pixel-art frame: outer dark border + inner paper, layered like the overlay */}
         <div
-          className="flex items-stretch"
+          className="relative"
           style={{
-            background: "hsl(var(--paper))",
-            color: "hsl(var(--frame))",
-            border: "2px solid hsl(var(--frame))",
+            width: 520,
+            padding: 4,
+            background: "hsl(var(--frame))",
+            boxShadow: "0 0 0 4px hsl(var(--paper)), 0 0 0 8px hsl(var(--frame))",
           }}
         >
-          {/* Corner pluses for pixel-art HUD feel */}
-          <span className="absolute -top-0.5 -left-0.5 text-[10px] leading-none" style={{ color: "hsl(var(--paper))" }}>+</span>
-          <span className="absolute -top-0.5 -right-0.5 text-[10px] leading-none" style={{ color: "hsl(var(--paper))" }}>+</span>
-          <span className="absolute -bottom-0.5 -left-0.5 text-[10px] leading-none" style={{ color: "hsl(var(--paper))" }}>+</span>
-          <span className="absolute -bottom-0.5 -right-0.5 text-[10px] leading-none" style={{ color: "hsl(var(--paper))" }}>+</span>
-
-          {/* Mode tag */}
           <div
-            className="flex items-center justify-center px-3"
+            className="flex items-stretch"
             style={{
-              background: "hsl(var(--frame))",
-              color: "hsl(var(--paper))",
-              fontSize: 11,
-              letterSpacing: "0.1em",
+              background: "hsl(var(--paper))",
+              color: "hsl(var(--frame))",
+              border: "2px solid hsl(var(--frame))",
             }}
           >
-            {mode === "zb" ? "ZB" : "BR"}
-          </div>
+            {/* Corner pluses for pixel-art HUD feel */}
+            <span
+              className="absolute -top-0.5 -left-0.5 text-[10px] leading-none"
+              style={{ color: "hsl(var(--paper))" }}
+            >
+              +
+            </span>
+            <span
+              className="absolute -top-0.5 -right-0.5 text-[10px] leading-none"
+              style={{ color: "hsl(var(--paper))" }}
+            >
+              +
+            </span>
+            <span
+              className="absolute -bottom-0.5 -left-0.5 text-[10px] leading-none"
+              style={{ color: "hsl(var(--paper))" }}
+            >
+              +
+            </span>
+            <span
+              className="absolute -bottom-0.5 -right-0.5 text-[10px] leading-none"
+              style={{ color: "hsl(var(--paper))" }}
+            >
+              +
+            </span>
 
-          {/* Rank */}
-          <div
-            className="flex items-center gap-3 px-4 py-2 min-w-[180px]"
-            style={{ borderRight: "2px solid hsl(var(--frame))" }}
-          >
-            <GlowIcon division={division} size={52} color={color} />
-            <div className="flex flex-col justify-center">
-              <div style={{ fontSize: 7, opacity: 0.7, letterSpacing: "0.15em" }}>
-                RANK
+            {/* Mode tag */}
+            <div
+              className="flex items-center justify-center px-3"
+              style={{
+                background: "hsl(var(--frame))",
+                color: "hsl(var(--paper))",
+                fontSize: 11,
+                letterSpacing: "0.1em",
+              }}
+            >
+              {mode === "zb" ? "ZB" : "BR"}
+            </div>
+
+            {/* Rank */}
+            <div
+              className="flex items-center gap-3 px-4 py-2 min-w-[180px]"
+              style={{ borderRight: "2px solid hsl(var(--frame))" }}
+            >
+              <GlowIcon division={division} size={52} color={color} />
+              <div className="flex flex-col justify-center">
+                <div style={{ fontSize: 7, opacity: 0.7, letterSpacing: "0.15em" }}>RANK</div>
+                <div
+                  className="uppercase truncate"
+                  style={{
+                    color,
+                    fontSize: 14,
+                    marginTop: 6,
+                    textShadow: "1px 1px 0 hsl(var(--frame) / 0.25)",
+                  }}
+                >
+                  {division}
+                </div>
               </div>
+            </div>
+
+            {/* Promotion bar */}
+            <div
+              className="flex-1 flex flex-col justify-center px-3 py-2"
+              style={{ borderRight: "2px solid hsl(var(--frame))" }}
+            >
+              <div className="flex items-center justify-between">
+                <span style={{ fontSize: 9, letterSpacing: "0.15em", opacity: 0.7 }}>NEXT</span>
+                <span style={{ fontSize: 12 }} className="tabular-nums">
+                  {pct}%
+                </span>
+              </div>
+              {/* Pixel progress bar: chunky blocks */}
               <div
-                className="uppercase truncate"
-                style={{ color, fontSize: 14, marginTop: 6, textShadow: "1px 1px 0 hsl(var(--frame) / 0.25)" }}
+                className="mt-2 flex gap-[2px]"
+                style={{
+                  padding: 2,
+                  border: "2px solid hsl(var(--frame))",
+                  background: "hsl(var(--frame) / 0.1)",
+                }}
               >
-                {division}
+                {Array.from({ length: 16 }).map((_, i) => {
+                  const filled = i < Math.round((pct / 100) * 16);
+                  return (
+                    <div
+                      key={i}
+                      style={{
+                        flex: 1,
+                        height: 8,
+                        background: filled ? color : "hsl(var(--frame) / 0.15)",
+                      }}
+                    />
+                  );
+                })}
               </div>
             </div>
-          </div>
 
-          {/* Promotion bar */}
-          <div
-            className="flex-1 flex flex-col justify-center px-3 py-2"
-            style={{ borderRight: "2px solid hsl(var(--frame))" }}
-          >
-            <div className="flex items-center justify-between">
-              <span style={{ fontSize: 9, letterSpacing: "0.15em", opacity: 0.7 }}>
-                NEXT
-              </span>
-              <span style={{ fontSize: 12 }} className="tabular-nums">
-                {pct}%
-              </span>
-            </div>
-            {/* Pixel progress bar: chunky blocks */}
+            {/* K/D */}
             <div
-              className="mt-2 flex gap-[2px]"
+              className="flex flex-col justify-center px-4 py-2 min-w-[90px] items-end"
               style={{
-                padding: 2,
-                border: "2px solid hsl(var(--frame))",
-                background: "hsl(var(--frame) / 0.1)",
+                transition: "background 0.3s",
+                background: flash ? `${color}22` : "transparent",
               }}
             >
-              {Array.from({ length: 16 }).map((_, i) => {
-                const filled = i < Math.round((pct / 100) * 16);
-                return (
-                  <div
-                    key={i}
-                    style={{
-                      flex: 1,
-                      height: 8,
-                      background: filled ? color : "hsl(var(--frame) / 0.15)",
-                    }}
-                  />
-                );
-              })}
-            </div>
-          </div>
-
-          {/* K/D */}
-          <div
-            className="flex flex-col justify-center px-4 py-2 min-w-[90px] items-end"
-            style={{
-              transition: "background 0.3s",
-              background: flash ? `${color}22` : "transparent",
-            }}
-          >
-            <div style={{ fontSize: 8, opacity: 0.7, letterSpacing: "0.15em" }}>
-              K/D
-            </div>
-            <div
-              className="tabular-nums"
-              style={{
-                fontSize: 18,
-                marginTop: 6,
-                color: flash ? color : "inherit",
-                transition: "color 0.3s",
-              }}
-            >
-              {displayKd.toFixed(2)}
+              <div style={{ fontSize: 8, opacity: 0.7, letterSpacing: "0.15em" }}>K/D</div>
+              <div
+                className="tabular-nums"
+                style={{
+                  fontSize: 18,
+                  marginTop: 6,
+                  color: flash ? color : "inherit",
+                  transition: "color 0.3s",
+                }}
+              >
+                {displayKd.toFixed(2)}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </ScaledOverlay>
     </main>
   );
 }
